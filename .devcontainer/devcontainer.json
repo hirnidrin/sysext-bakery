@@ -1,0 +1,28 @@
+{
+  "name": "sysext-bakery",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "features": {
+    // Reuses the host's docker daemon (bakery scripts shell out to `docker run`
+    // to build sysexts) instead of running a nested docker-in-docker daemon.
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+    // Needed only to install/run the Claude Code CLI.
+    "ghcr.io/devcontainers/features/node:1": {}
+  },
+  "remoteUser": "vscode",
+  "mounts": [
+    // Share host Claude Code config/credentials so `claude` inside the
+    // container is already authenticated and configured.
+    "source=${localEnv:HOME}/.claude,target=/home/vscode/.claude,type=bind,consistency=cached",
+    "source=${localEnv:HOME}/.claude.json,target=/home/vscode/.claude.json,type=bind,consistency=cached"
+  ],
+  "postCreateCommand": "npm install -g @anthropic-ai/claude-code",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "anthropic.claude-code"
+      ]
+    }
+  }
+}
