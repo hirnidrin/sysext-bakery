@@ -20,6 +20,16 @@ if [[ -s "${scriptroot}/.env" ]]; then
   source "${scriptroot}/.env"
 fi
 
+# Base URL the generated sysupdate .conf files fetch extension images from.
+# A GitHub release serves assets at "<base>/<tag>/<file>", which is exactly the
+#  layout systemd-sysupdate expects of a url-file source: it appends
+#  "/SHA256SUMS" to enumerate versions and "/<filename>" to fetch them. Since
+#  the per-extension metadata release carries both the manifest and the images,
+#  this needs no redirecting web server (that is what "bakery_hub" is for
+#  upstream, where releases are split across per-version tags).
+# Resolved after ".env" so both this and "bakery" stay overridable.
+bakery_base="${bakery_base:-https://github.com/${bakery}/releases/download}"
+
 # Add new library function scripts here:
 source "${libroot}/helpers.sh"
 source "${libroot}/generate.sh"

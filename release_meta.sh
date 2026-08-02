@@ -25,10 +25,12 @@ function out() {
 
 function fetch_artefacts() {
   local release="$1"
+  # Extended regular expression selecting the assets to fetch.
+  local pattern="$2"
 
   { curl_api_wrapper \
          "https://api.github.com/repos/${bakery}/releases/tags/${release}" \
-  | jq -r '.assets[] | "\(.name)\t\(.browser_download_url)"' | grep -E '(\bSHA256SUMS|\.conf)$' || true; } \
+  | jq -r '.assets[] | "\(.name)\t\(.browser_download_url)"' | grep -E "${pattern}" || true; } \
   > downloads.txt
 
   while IFS=$'\t' read -r name url; do
@@ -54,7 +56,9 @@ function fetch_extension_metadata() {
   for version in $(./bakery.sh list-bakery "${extension}"); do
     release="${extension}-${version}"
     out "* ${release}"
-    fetch_artefacts "${release}"
+    # Pull the images too: this release doubles as the sysupdate source, which
+    #  needs the manifest and the files it lists to sit under the same URL.
+    fetch_artefacts "${release}" '(\bSHA256SUMS|\.conf|\.raw)$'
     cat SHA256SUMS >> SHA256SUMS.all
   done
 
@@ -87,7 +91,7 @@ else
 
   for extension in $(./bakery.sh list --plain true); do
     echo
-    fetch_artefacts "$extension"
+    fetch_artefacts "$extension" '(\bSHA256SUMS|\.conf)$'
     if [[ ! -f SHA256SUMS ]] ; then
       out "* SKIPPED ${extension} as no SHA256SUMS is available"
       continue

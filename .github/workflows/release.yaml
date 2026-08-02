@@ -140,9 +140,12 @@ jobs:
           make_latest: false
           tag_name: ${{ matrix.extension }}
           body_path: bakery/Release.md
+          # The images are published here as well as in the per-version
+          #  releases, so this release can serve as a systemd-sysupdate source.
           files: |
             bakery/SHA256SUMS
             bakery/*.conf
+            bakery/*.raw
 
   update-global-metadata:
     needs: update-extension-metadata
