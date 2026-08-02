@@ -45,6 +45,8 @@ falco latest
 
 ig latest
 
+ipmitool latest
+
 k3s v1.32.2+k3s1
 k3s latest
 

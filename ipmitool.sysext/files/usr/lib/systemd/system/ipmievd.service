@@ -1,0 +1,19 @@
+[Unit]
+Description=IPMI event daemon
+Documentation=man:ipmievd(8)
+After=syslog.target
+
+[Service]
+Type=exec
+# "open" reads events from the OpenIPMI device, "sel" polls the BMC's system
+#  event log instead. Override in /etc/sysconfig/ipmievd if needed.
+Environment=IPMIEVD_OPTIONS=open
+EnvironmentFile=-/etc/sysconfig/ipmievd
+ExecStartPre=-/usr/bin/modprobe ipmi_devintf
+ExecStartPre=-/usr/bin/modprobe ipmi_si
+ExecStart=/usr/bin/ipmievd $IPMIEVD_OPTIONS nodaemon
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
