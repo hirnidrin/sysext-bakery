@@ -4,9 +4,28 @@
     "dockerfile": "Dockerfile"
   },
   "features": {
-    // Reuses the host's docker daemon (bakery scripts shell out to `docker run`
-    // to build sysexts) instead of running a nested docker-in-docker daemon.
-    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+    // A nested daemon, NOT docker-outside-of-docker: the bakery builds each
+    // sysext in a throwaway container with the (host-side) work directory
+    // bind-mounted, e.g. `docker run -v "$(pwd)":/install_root ...`. Sharing
+    // the host's daemon would make it resolve those paths on the host, where
+    // this container's /tmp work directory does not exist - docker then mounts
+    // an empty directory and the build dies with
+    // 'stat /install_root/build.sh: no such file or directory'.
+    //
+    // Verified with the Dev Containers extension set to either engine
+    // (`dev.containers.dockerPath` in the *local user* settings - that setting
+    // cannot be set from here, nor from workspace settings):
+    //   - rootful docker
+    //   - rootless podman, where the feature's `privileged: true` grants
+    //     capabilities only inside the user namespace, but the nested daemon
+    //     still comes up on cgroup v2 with the overlayfs storage driver
+    //     (its /var/lib/docker is a named volume, so it is not stacking
+    //     overlay on overlay).
+    // Note that docker-outside-of-docker does NOT work under rootless podman:
+    // the host's root-owned /var/run/docker.sock is unreadable even to
+    // container root, and every `docker` call fails with
+    // "error during connect: ... EOF".
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
     // Needed only to install/run the Claude Code CLI.
     "ghcr.io/devcontainers/features/node:1": {}
   },
