@@ -1,3 +1,10 @@
+# Reference documentation
+
+Consult these when working in this repo — prefer them over guessing at bakery or sysext behaviour:
+
+- <https://flatcar.github.io/sysext-bakery/> — the bakery: available extensions, per-extension usage and Butane snippets, and how to build/add an extension. Rendered from this repo's `docs/`, so a change here should keep that page correct.
+- <https://www.flatcar.org/docs/latest/sys-ext/> — how sysexts behave on Flatcar: merging at boot, `/etc/extensions`, systemd-sysupdate, baking extensions into OS images.
+
 # Repo setup
 
 This is a fork of [flatcar/sysext-bakery](https://github.com/flatcar/sysext-bakery), hosted at `origin` (hirnidrin/sysext-bakery).
