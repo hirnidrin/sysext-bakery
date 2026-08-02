@@ -35,5 +35,7 @@ Changes to upstream files:
 | [`release_meta.sh`](release_meta.sh) | Per-extension metadata releases now also carry the `.raw` images, so the manifest and the files it lists sit under one URL. |
 | [`.github/workflows/release.yaml`](.github/workflows/release.yaml) | Uploads `*.raw` to the per-extension release. |
 | [`.github/workflows/update-all-metadata.yaml`](.github/workflows/update-all-metadata.yaml) | Same. |
+| [`README.md`](README.md) | Replaced upstream's with a pointer to it, the table above, and this section. |
+| [`docs/index.md`](docs/index.md) | Added the `ipmitool` row to the extensions table, linking to this fork's releases. |
 
 Everything else is additive: `ipmitool.sysext/`, its docs, and the devcontainer.
