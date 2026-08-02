@@ -19,4 +19,21 @@ The upstream bakery's own extensions are still present in this tree as build scr
 
 ## Customizations
 
-_TBD_
+Upstream builds every extension listed in `release_build_versions.txt`, publishes them to `flatcar/sysext-bakery` releases, and serves sysupdate through the `extensions.flatcar.org` redirector — that hub exists because upstream splits images across per-version release tags, which is not a layout `systemd-sysupdate` can consume directly.
+
+This fork builds only its own extensions, publishes them to its own releases, and serves sysupdate straight from GitHub: a release already exposes its assets at `<base>/<tag>/<file>`, which is exactly what a `url-file` source needs (`<base>/SHA256SUMS` to enumerate versions, `<base>/<filename>` to fetch them). So the rolling per-extension release doubles as the update source, and no redirecting web server is needed.
+
+Changes to upstream files:
+
+| File | Change |
+| ---- | ------ |
+| [`release_build_versions.txt`](release_build_versions.txt) | Trimmed to this fork's extensions. Sole gate on what gets built. |
+| [`lib/libbakery.sh`](lib/libbakery.sh) | `bakery` defaults to `$GITHUB_REPOSITORY` so CI reads and writes this fork's releases; added `bakery_base` (sysupdate source URL) and `release_arches`. All overridable via `.env`. |
+| [`lib/sysupdate.conf.tmpl`](lib/sysupdate.conf.tmpl) | Source `Path=` built from `{BAKERY_BASE}` instead of the hub's `https://{BAKERY_HUB}/extensions/`. |
+| [`lib/generate.sh`](lib/generate.sh) | Substitutes `{BAKERY_BASE}` when generating the sysupdate config. |
+| [`release.sh`](release.sh) | Builds `$release_arches` rather than a hardcoded `x86-64 arm64`. |
+| [`release_meta.sh`](release_meta.sh) | Per-extension metadata releases now also carry the `.raw` images, so the manifest and the files it lists sit under one URL. |
+| [`.github/workflows/release.yaml`](.github/workflows/release.yaml) | Uploads `*.raw` to the per-extension release. |
+| [`.github/workflows/update-all-metadata.yaml`](.github/workflows/update-all-metadata.yaml) | Same. |
+
+Everything else is additive: `ipmitool.sysext/`, its docs, and the devcontainer.
