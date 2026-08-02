@@ -30,6 +30,13 @@ fi
 # Resolved after ".env" so both this and "bakery" stay overridable.
 bakery_base="${bakery_base:-https://github.com/${bakery}/releases/download}"
 
+# Architectures the release pipeline builds. Upstream publishes both x86-64 and
+#  arm64; arm64 is built in an emulated container and dominates build time, so
+#  this fork only publishes x86-64. Set to "x86-64 arm64" in ".env" (or here) to
+#  get both back - the release workflow still sets up QEMU binfmt for it.
+# Note this only affects releases; "bakery.sh create --arch arm64" is unaffected.
+release_arches="${release_arches:-x86-64}"
+
 # Add new library function scripts here:
 source "${libroot}/helpers.sh"
 source "${libroot}/generate.sh"

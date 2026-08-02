@@ -35,8 +35,8 @@ build script deletes it.
 ## Usage
 
 Download and merge the sysext at provisioning time using the below butane
-snippet. It is for the x86-64 version of ipmitool 1.8.19; adjust version and
-architecture as needed.
+snippet. It is for ipmitool 1.8.19; adjust the version as needed. Only x86-64
+images are published - see [Building](#building) for arm64.
 
 ```yaml
 variant: flatcar
@@ -121,6 +121,10 @@ somewhere else).
 the manifest; the downloaded images are always verified against the SHA256
 hashes it lists.
 
+The config matches `ipmitool-@v-%a.raw`, where `%a` expands to the architecture
+of the host running sysupdate. Since only x86-64 images are published, an arm64
+host will find no candidates and stay on whatever it was provisioned with.
+
 Add this to the snippet above to update automatically. Note that sysupdate only
 *stages* a new image - the drop-in below flags a reboot when the symlink
 changed, and the extension starts being used after that reboot:
@@ -176,3 +180,8 @@ systemd-sysupdate -C ipmitool update
 ./bakery.sh create ipmitool 1.8.19             # x86-64
 ./bakery.sh create ipmitool 1.8.19 --arch arm64
 ```
+
+The release pipeline only publishes x86-64 (`release_arches` in
+`lib/libbakery.sh`), because the arm64 image is compiled in an emulated
+container and takes far longer to build. Building arm64 locally works fine; to
+publish it too, set `release_arches="x86-64 arm64"`.
