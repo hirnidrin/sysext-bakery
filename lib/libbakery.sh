@@ -10,7 +10,10 @@
 libroot="$(dirname "${BASH_SOURCE[0]}")"
 scriptroot="$(cd "$(dirname "${BASH_SOURCE[0]}")/../"; pwd)"
 
-bakery="flatcar/sysext-bakery"
+# In GitHub Actions this resolves to the repo the workflow runs in (i.e. this
+#  fork), so releases are looked up and published there rather than upstream.
+# A local ".env" (sourced below) still overrides it.
+bakery="${GITHUB_REPOSITORY:-flatcar/sysext-bakery}"
 bakery_hub="extensions.flatcar.org"
 
 if [[ -s "${scriptroot}/.env" ]]; then
