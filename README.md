@@ -14,6 +14,7 @@ These are the extensions added by this fork. They are built and hosted in [this 
 | Extension | Latest version | Documentation |
 | --------- | -------------- | ------------- |
 | `ipmitool` | [1.8.19](https://github.com/hirnidrin/sysext-bakery/releases/tag/ipmitool-1.8.19) | [docs/ipmitool.md](docs/ipmitool.md) |
+| `restic` | [v0.19.1](https://github.com/hirnidrin/sysext-bakery/releases/tag/restic-v0.19.1) | [docs/restic.md](docs/restic.md) |
 
 The upstream bakery's own extensions are still present in this tree as build scripts, so they can be built locally with `./bakery.sh create <name> <version>`, but they are not released here — use [the upstream bakery](https://github.com/flatcar/sysext-bakery/releases) for those. What gets built and hosted is controlled by [`release_build_versions.txt`](release_build_versions.txt).
 
@@ -36,6 +37,6 @@ Changes to upstream files:
 | [`.github/workflows/release.yaml`](.github/workflows/release.yaml) | Uploads `*.raw` to the per-extension release. |
 | [`.github/workflows/update-all-metadata.yaml`](.github/workflows/update-all-metadata.yaml) | Same. |
 | [`README.md`](README.md) | Replaced upstream's with a pointer to it, the table above, and this section. |
-| [`docs/index.md`](docs/index.md) | Added the `ipmitool` row to the extensions table, linking to this fork's releases. |
+| [`docs/index.md`](docs/index.md) | Rows for this fork's own extensions link to this fork's releases instead of upstream's. |
 
-Everything else is additive: `ipmitool.sysext/`, its docs, and the devcontainer.
+Everything else is additive: this fork's own `*.sysext/` directories, their docs, and the devcontainer. See "Extensions built here" above for the current list.

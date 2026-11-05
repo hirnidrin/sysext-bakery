@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/devcontainers/base:ubuntu-24.04
 
 # Tools required to build sysexts (see README.md / upstream README):
-# curl, git, jq, squashfs-tools (or erofs-utils), xz-utils, yq, docker (via feature).
+# curl, git, jq, squashfs-tools (or erofs-utils), xz-utils, bzip2, yq, docker (via feature).
 RUN apt-get update && apt-get install -y --no-install-recommends \
         curl \
         git \
@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         squashfs-tools \
         erofs-utils \
         xz-utils \
+        bzip2 \
         ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 

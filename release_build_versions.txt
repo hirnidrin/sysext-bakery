@@ -23,3 +23,4 @@
 #
 
 ipmitool latest
+restic v0.19.1
