@@ -33,7 +33,7 @@ This fork builds and hosts **only its own extensions** (currently just `ipmitool
 
 ## Flow
 
-`.github/workflows/release.yaml` — daily 05:00 UTC cron plus `workflow_dispatch`, four chained jobs:
+`.github/workflows/release.yaml` — manually triggered (`workflow_dispatch` only; no cron — these two extensions don't update often enough to warrant a daily check), four chained jobs:
 
 1. `list-builds` → `release_dispatcher.sh`: reads `release_build_versions.txt`, expands `latest` via `bakery.sh list <ext> --latest true` (queries the *upstream project's* API), skips anything already released here, emits `builds` (`ext:version`) and `extensions` JSON.
 2. `create-release` → `release.sh <ext>:<ver>`: builds each arch in `$release_arches`, force-pushes tag `<ext>-<ver>`, publishes `.raw` + `.conf` + `SHA256SUMS` + build logs there.
@@ -60,7 +60,6 @@ All in `lib/libbakery.sh`, all overridable from `.env` — but **`.env` is gitig
 - Dry-run the dispatcher safely: `GITHUB_REPOSITORY=hirnidrin/sysext-bakery GITHUB_OUTPUT=/tmp/out ./release_dispatcher.sh` (read-only).
 - **Re-running the release workflow is a no-op if the release already exists** — `builds`/`extensions` come back empty and every downstream job is gated off. To force a rebuild, delete the **release** on GitHub (the tag is irrelevant, it gets force-pushed).
 - A `.conf` is generated at *build* time and stored in the per-version release; the metadata jobs only copy it. So changing `bakery_base` requires a rebuild — "Force an update to all metadata" will faithfully re-publish the stale conf.
-- Scheduled workflows are disabled in forks until Actions is enabled in the Actions tab, and auto-disable again after 60 days of repo inactivity.
 - `report-missing-extension-docs.yaml` opens issues on any push touching `release_build_versions.txt` for extensions lacking docs.
 
 ## Adding an extension
