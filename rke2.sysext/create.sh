@@ -21,7 +21,7 @@ function list_latest_release() {
 
   for k8s_version in $(kubernetes_list_latest_release); do
     cat "${relcache}" \
-      | grep -F "${k8s_version}+rke2r" \
+      | grep -F "${k8s_version}+rke2r" || true \
       | sort -V \
       | tail -n1
   done
